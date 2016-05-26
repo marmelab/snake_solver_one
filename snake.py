@@ -6,9 +6,10 @@ from time import sleep
 
 WIDTH = 20
 HEIGHT = 10
-SPEED = 1
+SPEED = 0.2
 grid = []
 snake = [[2,1], [2,2], [2,3], [2,4]]
+apple = [2, 11]
 
 # Create a 2 dimentional array
 def init_grid():
@@ -21,14 +22,16 @@ def init_grid():
             else:
                 grid[row].append(' ')
 
-# Init snake
-def init_snake():
-    for row,column in snake:
-        grid[row][column] = 's'
-
 def run_snake(event):
     head_row, head_column = snake[len(snake) -1]
-    snake.pop(0)
+
+    if [head_row, head_column] == apple:
+        row = randint(1, HEIGHT - 2)
+        column = randint(1, WIDTH - 2)
+        apple[:] = [row, column]
+    else:
+        snake.pop(0)
+
     if event == 'up':
         snake.append([head_row - 1, head_column])
     elif event == 'down':
@@ -38,23 +41,22 @@ def run_snake(event):
     elif event == 'right':
         snake.append([head_row, head_column + 1])
 
-
-# Init apple
-def init_apple():
-    row = randint(1, HEIGHT - 2)
-    column = randint(1, WIDTH - 2)
-    grid[row][column] = 'a'
-
 # Print grid
 def print_grid():
+    row, column = apple
+    grid[row][column] = 'a'
+    for row,column in snake:
+        grid[row][column] = 's'
     for row in grid:
         print(" ".join(row))
+
+# Initialization
+init_grid()
+print_grid()
 
 while True:
     system('clear')
     init_grid()
-    init_apple()
-    init_snake()
-    run_snake('right')
     print_grid()
+    run_snake('right')
     sleep(SPEED)
