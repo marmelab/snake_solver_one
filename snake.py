@@ -26,10 +26,18 @@ def init_snake():
     for row,column in snake:
         grid[row][column] = 's'
 
-def run_snake():
+def run_snake(event):
     head_row, head_column = snake[len(snake) -1]
     snake.pop(0)
-    snake.append([head_row, head_column + 1])
+    if event == 'up':
+        snake.append([head_row - 1, head_column])
+    elif event == 'down':
+        snake.append([head_row + 1, head_column])
+    elif event == 'left':
+        snake.append([head_row, head_column - 1])
+    elif event == 'right':
+        snake.append([head_row, head_column + 1])
+
 
 # Init apple
 def init_apple():
@@ -47,6 +55,6 @@ while True:
     init_grid()
     init_apple()
     init_snake()
-    run_snake()
+    run_snake('right')
     print_grid()
     sleep(SPEED)
