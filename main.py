@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 import curses
-from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
 from snake import Snake
 from apple import Apple
+# from astar import astar
+from grid import Grid
 
 WIDTH = 50
 HEIGHT = 10
@@ -34,23 +35,18 @@ while True:
     apple.display()
     snake.display()
 
+    grid = Grid(WIDTH, HEIGHT, snake)
+
     # Snake eat apple
     if snake.head == apple.position:
         snake.eat(apple)
 
-    # If snake out of the window
-    head_line, head_column = snake.head
-    if head_line > MAX_HEIGHT or head_line == 0 or head_column > MAX_WIDTH or head_column == 0:
-        reset()
-
-    # Snake move
-    key = window.getch()
-    if key in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]:
-        snake.move(key)
-    else:
-        snake.move(snake.direction)
+    # A* Algorithm
+    # next_position = astar(snake.head, apple.position, grid)
+    # snake.move(next_position)
 
     # (R)eset
+    key = window.getch()
     if key == 114 or key == 82:
         reset()
 
