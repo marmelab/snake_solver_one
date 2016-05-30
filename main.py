@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 import curses
+from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
 from snake import Snake
 from apple import Apple
-# from astar import astar
+from astar import Astar
 from grid import Grid
 
 WIDTH = 50
@@ -11,6 +12,7 @@ HEIGHT = 10
 MAX_WIDTH = WIDTH - 2
 MAX_HEIGHT = HEIGHT - 2
 SPEED = 100
+auto = False
 
 # Initialization
 curses.initscr()
@@ -30,7 +32,7 @@ while True:
     window.clear()
     window.border(0)
     window.addstr(0, 18, 'Snake Solver')
-    window.addstr(HEIGHT - 1, 5, '(Q)uit, (R)eset')
+    window.addstr(HEIGHT - 1, 1, '(Q)uit, (R)eset, (A)uto, (M)anual')
 
     apple.display()
     snake.display()
@@ -39,14 +41,39 @@ while True:
 
     # Snake eat apple
     if snake.head == apple.position:
-        snake.eat(apple)
+        snake.eat(apple, grid)
 
     # A* Algorithm
-    # next_position = astar(snake.head, apple.position, grid)
-    # snake.move(next_position)
+    if auto:
+        next_position = Astar(tuple(snake.head), tuple(apple.position), grid.grid)
+        if next_position == False:
+            reset()
+            continue
+        snake.automove(next_position[0])
+
+    key = window.getch()
+
+    # (M)anual
+    if not auto:
+        # If snake out of the window
+        head_line, head_column = snake.head
+        if head_line > MAX_HEIGHT or head_line == 0 or head_column > MAX_WIDTH or head_column == 0:
+            reset()
+
+        if key in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]:
+            snake.move(key)
+        else:
+            snake.move(snake.direction)
+
+    # (A)uto
+    if key == 65 or key == 97:
+        auto = True
+
+    # (M)anuel
+    if key == 77 or key == 109:
+        auto = False
 
     # (R)eset
-    key = window.getch()
     if key == 114 or key == 82:
         reset()
 
