@@ -9,7 +9,7 @@ def Astar(start, end, grid):
     array = numpy.array(grid)
 
     open_list = []
-    close_list = set()
+    close_list = []
     came_from = {}
 
     gscore = {start:0}
@@ -29,7 +29,7 @@ def Astar(start, end, grid):
                 current = came_from[current]
             return data[::-1]
 
-        close_list.add(current)
+        close_list.append(current)
         for i, j in neighbors:
             neighbor = current[0] + i, current[1] + j
             tentative_g_score = gscore[current] + h(current, neighbor)
@@ -45,7 +45,7 @@ def Astar(start, end, grid):
             if neighbor in close_list and tentative_g_score >= gscore.get(neighbor, 0):
                 continue
 
-            if tentative_g_score > gscore.get(neighbor, 0) or neighbor not in [i[1]for i in open_list]:
+            if tentative_g_score < gscore.get(neighbor, 0) or neighbor not in [i[1]for i in open_list]:
                 came_from[neighbor] = current
                 gscore[neighbor] = tentative_g_score
                 fscore[neighbor] = tentative_g_score + h(neighbor, end)

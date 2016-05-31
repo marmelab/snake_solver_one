@@ -3,7 +3,7 @@ from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
 class Snake(object):
     def __init__(self, window):
         self.position = [[2,1], [2,2], [2,3], [2,4]]
-        self.head = self.position[len(self.position) -1]
+        self.head = self.position[-1]
         self.window = window
         self.is_eating = False
         self.direction = KEY_RIGHT
@@ -30,7 +30,7 @@ class Snake(object):
         elif direction == KEY_RIGHT:
             self.position.append([head_line, head_column + 1])
 
-        self.head = self.position[len(self.position) -1]
+        self.head = self.position[-1]
 
     def automove(self, position):
         if not self.is_eating:
@@ -38,7 +38,15 @@ class Snake(object):
 
         self.is_eating = False
         self.position.append(position)
-        self.head = self.position[len(self.position) -1]
+        self.head = self.position[-1]
+
+    def any_possible_move(self, grid):
+        neighbors = [(0,1),(0,-1),(1,0),(-1,0)]
+        for i, j in neighbors:
+            neighbor = self.head[0] + i, self.head[1] + j
+            if grid.grid[neighbor[0]][neighbor[1]] == 0:
+                return [neighbor[0], neighbor[1]]
+        return False
 
     def eat(self, apple, grid):
         self.is_eating = True
