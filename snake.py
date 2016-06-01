@@ -1,18 +1,23 @@
 from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
 
 class Snake(object):
+    """Snake object"""
+
     def __init__(self, window):
-        self.position = [[2,1], [2,2], [2,3], [2,4]]
-        self.head = self.position[len(self.position) -1]
+        """Initialize position of the snake"""
+        self.position = [[2, 1], [2, 2], [2, 3], [2, 4]]
+        self.head = self.position[-1]
         self.window = window
         self.is_eating = False
         self.direction = KEY_RIGHT
 
     def display(self):
-        for line,column in self.position:
+        """Display snake on curses window"""
+        for line, column in self.position:
             self.window.addstr(line, column, 's')
 
     def move(self, direction):
+        """Manual move of snake"""
         self.direction = direction
         head_line, head_column = self.head
 
@@ -30,11 +35,31 @@ class Snake(object):
         elif direction == KEY_RIGHT:
             self.position.append([head_line, head_column + 1])
 
-        self.head = self.position[len(self.position) -1]
+        self.head = self.position[-1]
 
-    def eat(self, apple):
+    def automove(self, position):
+        """Deplace position of the snake with A* algorithm"""
+        if not self.is_eating:
+            self.position.pop(0)
+
+        self.is_eating = False
+        self.position.append(position)
+        self.head = self.position[-1]
+
+    def any_possible_move(self, grid):
+        """Return any possible position"""
+        neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        for i, j in neighbors:
+            neighbor = self.head[0] + i, self.head[1] + j
+            if grid.grid[neighbor[0]][neighbor[1]] == 0:
+                return [neighbor[0], neighbor[1]]
+        return False
+
+    def eat(self, apple, grid):
+        """Snake eat apple and regenerate apple position"""
         self.is_eating = True
-        apple.random()
+        apple.random(grid)
 
     def reset(self):
+        """Reset position of the snake"""
         self.__init__(self.window)
