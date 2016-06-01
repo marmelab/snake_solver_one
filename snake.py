@@ -11,7 +11,13 @@ class Snake(object):
         self.head = self.position[-1]
         self.window = window
         self.is_eating = False
-        self.direction = KEY_RIGHT
+        self.last_direction = KEY_RIGHT
+        self.reverse_move = {
+            KEY_UP: KEY_DOWN,
+            KEY_DOWN: KEY_UP,
+            KEY_LEFT: KEY_RIGHT,
+            KEY_RIGHT: KEY_LEFT,
+        }
 
     def display(self):
         """Display snake on curses window"""
@@ -20,8 +26,10 @@ class Snake(object):
 
     def move(self, direction):
         """Manual move of snake"""
-        self.direction = direction
         head_line, head_column = self.head
+
+        if direction == self.reverse_move[self.last_direction]:
+            direction = self.last_direction
 
         if not self.is_eating:
             self.position.pop(0)
@@ -37,6 +45,7 @@ class Snake(object):
         elif direction == KEY_RIGHT:
             self.position.append([head_line, head_column + 1])
 
+        self.last_direction = direction
         self.head = self.position[-1]
 
     def automove(self, position):
