@@ -8,7 +8,7 @@ from apple import Apple
 from astar import Astar
 from grid import Grid
 
-log.basicConfig(filename='debug.log',level=log.DEBUG)
+log.basicConfig(filename='debug.log', level=log.DEBUG)
 
 WIDTH = 50
 HEIGHT = 10
@@ -27,6 +27,7 @@ snake = Snake(window)
 apple = Apple(window)
 
 def reset():
+    """Reset game"""
     apple.reset()
     snake.reset()
 
