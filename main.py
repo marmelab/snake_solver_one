@@ -34,7 +34,7 @@ def reset():
 while True:
     window.clear()
     window.border(0)
-    window.addstr(0, 18, 'Snake Solver')
+    window.addstr(0, 18, ' Snake Solver ')
     window.addstr(HEIGHT - 1, 1, '(Q)uit, (R)eset, (A)uto, (M)anual')
     window.timeout(speed)
 
@@ -74,7 +74,7 @@ while True:
         if key in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]:
             snake.move(key)
         else:
-            snake.move(snake.direction)
+            snake.move(snake.last_direction)
 
     # Speed +
     if key == 43:
