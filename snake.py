@@ -1,5 +1,7 @@
 from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
 
+neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
 class Snake(object):
     """Snake object"""
 
@@ -46,12 +48,22 @@ class Snake(object):
         self.position.append(position)
         self.head = self.position[-1]
 
+    def futur_move_is_possible(self, position, grid):
+        """Return if futur move is possible"""
+        if not position:
+            return False
+
+        for i, j in neighbors:
+            neighbor = position[0] + i, position[1] + j
+            if grid.grid[neighbor[0]][neighbor[1]] == 0:
+                return True
+        return False
+
     def any_possible_move(self, grid):
         """Return any possible position"""
-        neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         for i, j in neighbors:
             neighbor = self.head[0] + i, self.head[1] + j
-            if grid.grid[neighbor[0]][neighbor[1]] == 0:
+            if grid.grid[neighbor[0]][neighbor[1]] == 0 and self.futur_move_is_possible(neighbor, grid):
                 return [neighbor[0], neighbor[1]]
         return False
 
