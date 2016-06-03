@@ -2,6 +2,8 @@
 
 Snake Solver is a solver of the snake game.
 
+![Screen Snake](http://bit.ly/1r4aY94)
+
 ## Installation
 
 `make install`
