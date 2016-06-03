@@ -1,30 +1,22 @@
 #!/usr/bin/env python
 
 import curses
-import logging as log
 from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
 from snake import Snake
 from apple import Apple
 from astar import Astar
 from grid import Grid
 
-log.basicConfig(filename='debug.log', level=log.DEBUG)
-
-WIDTH = 50
-HEIGHT = 10
-MAX_WIDTH = WIDTH - 2
-MAX_HEIGHT = HEIGHT - 2
-speed = 100
-auto = True
-
 # Initialization
 curses.initscr()
-window = curses.newwin(HEIGHT, WIDTH, 0, 0)
+window = curses.newwin(Grid.HEIGHT, Grid.WIDTH, 0, 0)
 window.keypad(1)
 curses.curs_set(0)
 
-snake = Snake(window)
-apple = Apple(window)
+speed = 100
+auto = False
+snake = Snake()
+apple = Apple()
 
 def reset():
     """Reset game"""
@@ -35,13 +27,11 @@ while True:
     window.clear()
     window.border(0)
     window.addstr(0, 18, ' Snake Solver ')
-    window.addstr(HEIGHT - 1, 1, '(Q)uit, (R)eset, (A)uto, (M)anual')
+    window.addstr(Grid.HEIGHT - 1, 1, '(Q)uit, (R)eset, (A)uto, (M)anual')
     window.timeout(speed)
 
-    apple.display()
-    snake.display()
-
-    grid = Grid(WIDTH, HEIGHT, snake)
+    grid = Grid(snake, apple)
+    grid.display(window)
 
     # Snake eat apple
     if snake.head == apple.position:
@@ -53,22 +43,18 @@ while True:
         move = path[0] if path else False
 
         if not move:
-            log.debug('test any possible move')
             move = snake.any_possible_move(grid)
 
         if move:
             snake.automove(move)
         else:
-            log.debug('dead')
             reset()
 
     key = window.getch()
 
     # (M)anual
     if not auto:
-        # If snake out of the window
-        head_line, head_column = snake.head
-        if head_line > MAX_HEIGHT or head_line == 0 or head_column > MAX_WIDTH or head_column == 0:
+        if snake.is_collide():
             reset()
 
         if key in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]:
