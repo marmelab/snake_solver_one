@@ -21,9 +21,9 @@ def Astar(start, end, grid):
     """
     array = numpy.array(grid)
 
-    open_list = [] # Nodes to analyze
-    close_list = [] # Nodes already analyzed
-    came_from = {} # List of parents
+    open_list = []
+    close_list = []
+    came_from = {}
 
     # Add F score in open_list
     gscore = {start:0}

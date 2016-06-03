@@ -1,28 +1,29 @@
 from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
+from grid import Grid
 
 neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
 class Snake(object):
     """Snake object"""
 
-    def __init__(self, window):
+    reverse_move = {
+        KEY_UP: KEY_DOWN,
+        KEY_DOWN: KEY_UP,
+        KEY_LEFT: KEY_RIGHT,
+        KEY_RIGHT: KEY_LEFT,
+    }
+
+    def __init__(self):
         """Initialize position of the snake"""
         self.position = [[2, 1], [2, 2], [2, 3], [2, 4]]
         self.head = self.position[-1]
-        self.window = window
         self.is_eating = False
         self.last_direction = KEY_RIGHT
-        self.reverse_move = {
-            KEY_UP: KEY_DOWN,
-            KEY_DOWN: KEY_UP,
-            KEY_LEFT: KEY_RIGHT,
-            KEY_RIGHT: KEY_LEFT,
-        }
 
-    def display(self):
-        """Display snake on curses window"""
-        for line, column in self.position:
-            self.window.addstr(line, column, 's')
+    def is_collide(self):
+        head_line, head_column = self.head
+        if head_line > Grid.MAX_HEIGHT or head_line == 0 or head_column > Grid.MAX_WIDTH or head_column == 0:
+            self.reset()
 
     def move(self, direction):
         """Manual move of snake"""
@@ -83,4 +84,4 @@ class Snake(object):
 
     def reset(self):
         """Reset position of the snake"""
-        self.__init__(self.window)
+        self.__init__()
