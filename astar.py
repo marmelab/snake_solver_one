@@ -6,7 +6,7 @@ def h(a, b):
     """Return distance between 2 points"""
     return (b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2
 
-def Astar(start, end, grid):
+def find_path(start, end, grid):
     """Return path between 2 points
 
     example :
@@ -17,7 +17,7 @@ def Astar(start, end, grid):
         [0, 0, 1, 0],
         [0, 0, 0, 0],
     ]
-    path = Astar((3,3), (0, 0), grid)
+    path = find_path((3,3), (0, 0), grid)
     """
     array = numpy.array(grid)
 
@@ -56,7 +56,7 @@ def Astar(start, end, grid):
             # Check neighbor value
             if 0 <= neighbor[0] < array.shape[0]:
                 if 0 <= neighbor[1] < array.shape[1]:
-                    if array[neighbor[0]][neighbor[1]] == 1:
+                    if array[neighbor[0]][neighbor[1]] == 1 and (neighbor[0], neighbor[1]) != end:
                         continue
                 else:
                     continue

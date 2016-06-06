@@ -1,7 +1,5 @@
+from config import MAX_WIDTH, MAX_HEIGHT
 from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
-from grid import Grid
-
-neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
 class Snake(object):
     """Snake object"""
@@ -15,14 +13,15 @@ class Snake(object):
 
     def __init__(self):
         """Initialize position of the snake"""
-        self.position = [[2, 1], [2, 2], [2, 3], [2, 4]]
+        self.position = [[2, 1], [2, 2]]
         self.head = self.position[-1]
+        self.tail = self.position[0]
         self.is_eating = False
         self.last_direction = KEY_RIGHT
 
     def is_collide(self):
         head_line, head_column = self.head
-        if head_line > Grid.MAX_HEIGHT or head_line == 0 or head_column > Grid.MAX_WIDTH or head_column == 0:
+        if head_line > MAX_HEIGHT or head_line == 0 or head_column > MAX_WIDTH or head_column == 0:
             self.reset()
 
     def move(self, direction):
@@ -48,34 +47,6 @@ class Snake(object):
 
         self.last_direction = direction
         self.head = self.position[-1]
-
-    def automove(self, position):
-        """Deplace position of the snake with A* algorithm"""
-        if not self.is_eating:
-            self.position.pop(0)
-
-        self.is_eating = False
-        self.position.append(position)
-        self.head = self.position[-1]
-
-    def futur_move_is_possible(self, position, grid):
-        """Return if futur move is possible"""
-        if not position:
-            return False
-
-        for i, j in neighbors:
-            neighbor = position[0] + i, position[1] + j
-            if grid.grid[neighbor[0]][neighbor[1]] == 0:
-                return True
-        return False
-
-    def any_possible_move(self, grid):
-        """Return any possible position"""
-        for i, j in neighbors:
-            neighbor = self.head[0] + i, self.head[1] + j
-            if grid.grid[neighbor[0]][neighbor[1]] == 0 and self.futur_move_is_possible(neighbor, grid):
-                return [neighbor[0], neighbor[1]]
-        return False
 
     def eat(self, apple, grid):
         """Snake eat apple and regenerate apple position"""
