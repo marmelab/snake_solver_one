@@ -1,3 +1,4 @@
+from config import WIDTH, HEIGHT
 from random import choice
 
 class Apple(object):
@@ -5,14 +6,14 @@ class Apple(object):
 
     def __init__(self):
         """Initialize apple"""
-        self.position = [2, 35]
+        self.position = [2, 8]
 
     def random(self, grid):
         """Generate random position of apple"""
         nodes = []
-        for line in range(grid.HEIGHT):
-            for column in range(grid.WIDTH):
-                if grid.grid[line][column] != 1:
+        for line in range(HEIGHT):
+            for column in range(WIDTH):
+                if grid[line][column] != 1:
                     nodes.append([line, column])
         self.position = choice(nodes)
 
