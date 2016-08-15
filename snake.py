@@ -22,7 +22,8 @@ class Snake(object):
     def is_collide(self):
         head_line, head_column = self.head
         if head_line > MAX_HEIGHT or head_line == 0 or head_column > MAX_WIDTH or head_column == 0:
-            self.reset()
+            return True
+        return False
 
     def move(self, direction):
         """Manual move of snake"""
